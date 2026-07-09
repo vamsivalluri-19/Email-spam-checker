@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentiSpam AI - Premium Email Spam Detection</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app">
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="toast-container"></div>
+
+        <!-- 1. LANDING VIEW -->
+        <div id="view-landing" class="view active">
+            <header class="navbar">
+                <div class="logo">
+                    <i class="fa-solid fa-shield-halved logo-icon"></i>
+                    <span>SentiSpam <span class="logo-accent">AI</span></span>
+                </div>
+                <div class="nav-links">
+                    <button class="btn btn-text" onclick="showAuthModal('login')">Login</button>
+                    <button class="btn btn-primary" onclick="showAuthModal('register')">Sign Up</button>
+                </div>
+            </header>
+
+            <main class="hero-section">
+                <div class="hero-content">
+                    <div class="badge-pill">Powered by Machine Learning</div>
+                    <h1>Protect Your Inbox with <span class="gradient-text">Advanced AI</span></h1>
+                    <p>Detect email spam, phishing attempts, and fraudulent text with high precision using our trained Naive Bayes machine learning classifier.</p>
+                    <div class="hero-ctas">
+                        <button class="btn btn-lg btn-primary" onclick="showAuthModal('register')">Get Started Free <i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="btn btn-lg btn-secondary" onclick="scrollToFeatures()">See Features</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="glass-card visual-card">
+                        <div class="card-bar">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="mock-email-check">
+                            <div class="mock-header">
+                                <span class="mock-from">From: winner@lottery-gains.net</span>
+                                <span class="mock-subject">Subject: Congratulations! You won $1M!</span>
+                            </div>
+                            <div class="mock-body">
+                                Dear email user, you have been selected as the grand prize winner...
+                            </div>
+                            <div class="mock-result spam animate-pulse">
+                                <i class="fa-solid fa-triangle-exclamation"></i> SPAM DETECTED (95% Confidence)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <section id="features" class="features-section">
+                <h2>Why Choose SentiSpam AI?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>Naive Bayes Classifier</h3>
+                        <p>Leverages robust probabilistic ML to identify complex spam patterns and terms.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <h3>Real-time Analysis</h3>
+                        <p>Analyze email subjects and bodies instantly with detailed probability metrics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-file-csv"></i></div>
+                        <h3>Bulk Processing</h3>
+                        <p>Upload CSV or TXT lists of emails to scan entire mailing lists at once.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <h3>Admin Insights</h3>
+                        <p>Advanced admin panel with usage graphs, user management, and ML control panel.</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <p>&copy; 2026 SentiSpam AI. Designed for maximum inbox security.</p>
+            </footer>
+        </div>
+
+        <!-- 2. AUTH MODAL -->
+        <div id="auth-modal" class="modal-overlay">
+            <div class="glass-card modal-card">
+                <button class="btn-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+                
+                <!-- Login Form -->
+                <div id="auth-login-container">
+                    <h2>Welcome Back</h2>
+                    <p class="subtitle">Enter your credentials to access your dashboard</p>
+                    <form id="login-form" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-envelope input-icon"></i>
+                                <input type="email" id="login-email" required placeholder="name@company.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" id="login-password" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Sign In <i class="fa-solid fa-right-to-bracket"></i></button>
+                    </form>
+                    <p class="auth-toggle-text">Don't have an account? <a href="#" onclick="toggleAuthForm('register')">Sign Up</a></p>
+                </div>
+
+                <!-- Register Form -->
+                <div id="auth-register-container" class="hidden">
+                    <h2>Create Account</h2>
+                    <p class="subtitle">Start scanning your emails in seconds</p>
+                    <form id="register-form" onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user input-icon"></i>
+                                <input type="text" id="register-name" required placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-envelope input-icon"></i>
+                                <input type="email" id="register-email" required placeholder="name@company.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input type="password" id="register-password" required placeholder="Min 6 characters">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Sign Up <i class="fa-solid fa-user-plus"></i></button>
+                    </form>
+                    <p class="auth-toggle-text">Already have an account? <a href="#" onclick="toggleAuthForm('login')">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar">
+                <div class="logo">
+                    <i class="fa-solid fa-shield-halved logo-icon"></i>
+                    <span>SentiSpam <span class="logo-accent">AI</span></span>
+                </div>
+                
+                <div class="user-profile-summary">
+                    <div class="avatar"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="user-info">
+                        <span id="user-display-name" class="name">Loading...</span>
+                        <span id="user-display-role" class="role">User</span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="nav-item active" onclick="switchTab('tab-checker')">
+                                <i class="fa-solid fa-envelope-open-text"></i> Spam Checker
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item" onclick="switchTab('tab-bulk')">
+                                <i class="fa-solid fa-file-import"></i> Bulk Upload
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item" onclick="switchTab('tab-history')">
+                                <i class="fa-solid fa-history"></i> Scan History
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-item" onclick="switchTab('tab-settings')">
+                                <i class="fa-solid fa-sliders"></i> Settings
+                            </a>
+                        </li>
+                        <li id="sidebar-admin-link" class="hidden">
+                            <a href="#" class="nav-item nav-item-admin" onclick="switchTab('tab-admin')">
+                                <i class="fa-solid fa-lock-open"></i> Admin Panel
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button class="btn btn-secondary btn-block" onclick="handleLogout()">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <header class="dashboard-header">
+                    <h2 id="tab-title">Spam Checker</h2>
+                    <span id="current-date-badge" class="date-badge">July 9, 2026</span>
+                </header>
+
+                <!-- TAB: SINGLE SPAM CHECKER -->
+                <div id="tab-checker" class="dashboard-tab active">
+                    <div class="tab-grid">
+                        <div class="glass-card checker-card">
+                            <h3>Analyze Email Content</h3>
+                            <p class="section-desc">Paste an email's subject and content to predict spam probabilities.</p>
+                            <form id="checker-form" onsubmit="handleSinglePredict(event)">
+                                <div class="form-group">
+                                    <label for="email-subject">Email Subject (Optional)</label>
+                                    <input type="text" id="email-subject" placeholder="e.g. Critical Account Update">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email-content">Email Body / Content</label>
+                                    <textarea id="email-content" required rows="10" placeholder="e.g. Paste the full body of the email here..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Analyze Email</button>
+                                <button type="button" class="btn btn-secondary" onclick="clearChecker()">Clear</button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card result-card">
+                            <h3>Analysis Results</h3>
+                            <div id="checker-result-placeholder" class="result-placeholder">
+                                <i class="fa-solid fa-chart-simple placeholder-icon animate-pulse"></i>
+                                <p>Submit an email to view real-time spam prediction metrics.</p>
+                            </div>
+                            <div id="checker-result-display" class="result-display hidden">
+                                <div class="result-badge-container">
+                                    <div id="result-badge" class="badge">SPAM</div>
+                                    <div id="fallback-badge" class="badge badge-warning hidden">REGEX FALLBACK</div>
+                                </div>
+
+                                <div class="meter-container">
+                                    <div class="meter-label">
+                                        <span>Spam Probability</span>
+                                        <span id="result-probability">95%</span>
+                                    </div>
+                                    <div class="meter-track">
+                                        <div id="result-meter" class="meter-fill" style="width: 95%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="keywords-analysis">
+                                    <h4>Trigger Keywords Detected:</h4>
+                                    <div id="result-keywords" class="keywords-list">
+                                        <!-- Keywords pills injected here -->
+                                    </div>
+                                    <p class="keywords-note">These words indicate typical patterns found in historical spam emails.</p>
+                                </div>
+
+                                <div class="recommendation-card">
+                                    <div class="rec-icon"><i class="fa-solid fa-circle-info"></i></div>
+                                    <div class="rec-content">
+                                        <h5 id="rec-title">Caution Advised</h5>
+                                        <p id="rec-desc">This email has a high likelihood of being spam or phishing. Avoid clicking links or replying with personal info.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: BULK FILE SCANNER -->
+                <div id="tab-bulk" class="dashboard-tab">
+                    <div class="glass-card bulk-card">
+                        <h3>Bulk Email Processor</h3>
+                        <p class="section-desc">Upload a CSV or TXT file of email entries to process. For CSV, we will automatically check columns for text body. For TXT, emails should be separated by blank lines.</p>
+                        
+                        <div class="drop-zone" id="drop-zone" onclick="triggerFileSelect()">
+                            <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                            <p>Drag and drop your file here or <span class="file-link">browse</span></p>
+                            <span class="file-types">Supports .CSV, .TXT (Max 10MB)</span>
+                            <input type="file" id="bulk-file-input" class="hidden" accept=".csv,.txt" onchange="handleFileChange(event)">
+                        </div>
+                        
+                        <div id="selected-file-card" class="file-card hidden">
+                            <div class="file-info">
+                                <i class="fa-solid fa-file-csv file-icon"></i>
+                                <div class="file-details">
+                                    <span id="selected-file-name" class="name">emails.csv</span>
+                                    <span id="selected-file-size" class="size">45 KB</span>
+                                </div>
+                            </div>
+                            <button class="btn-remove" onclick="removeSelectedFile()"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="btn-process-bulk" class="btn btn-primary" onclick="uploadAndProcessFile()" disabled><i class="fa-solid fa-gears"></i> Process Bulk List</button>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Results display -->
+                    <div id="bulk-results-card" class="glass-card bulk-results-card hidden">
+                        <div class="bulk-results-header">
+                            <h3>Processing Summary</h3>
+                            <button class="btn btn-secondary btn-sm" onclick="exportBulkResults()"><i class="fa-solid fa-download"></i> Export Results (CSV)</button>
+                        </div>
+
+                        <div class="stats-grid stats-grid-mini">
+                            <div class="stat-box">
+                                <span class="label">Total Scanned</span>
+                                <span id="bulk-stat-total" class="value">0</span>
+                            </div>
+                            <div class="stat-box spam">
+                                <span class="label">Spam Flagged</span>
+                                <span id="bulk-stat-spam" class="value">0</span>
+                            </div>
+                            <div class="stat-box ham">
+                                <span class="label">Ham (Safe)</span>
+                                <span id="bulk-stat-ham" class="value">0</span>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table" id="bulk-results-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Subject</th>
+                                        <th>Content Preview</th>
+                                        <th>Prediction</th>
+                                        <th>Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Injected rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: SCAN HISTORY -->
+                <div id="tab-history" class="dashboard-tab">
+                    <div class="glass-card history-controls-card">
+                        <div class="search-bar-container">
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                                <input type="text" id="history-search" placeholder="Search by subject or content..." oninput="debounceHistorySearch()">
+                            </div>
+                            <div class="filter-group">
+                                <label for="history-filter-pred">Prediction:</label>
+                                <select id="history-filter-pred" onchange="fetchHistory()">
+                                    <option value="all">All Predictions</option>
+                                    <option value="spam">Spam Only</option>
+                                    <option value="ham">Ham Only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card history-list-card">
+                        <div class="table-container">
+                            <table class="data-table" id="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Method</th>
+                                        <th>Subject</th>
+                                        <th>Content Preview</th>
+                                        <th>Result</th>
+                                        <th>Confidence</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table-body">
+                                    <!-- History rows injected here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination">
+                            <button id="btn-history-prev" class="btn btn-secondary btn-sm" onclick="changeHistoryPage(-1)" disabled><i class="fa-solid fa-chevron-left"></i> Prev</button>
+                            <span id="history-page-info">Page 1 of 1</span>
+                            <button id="btn-history-next" class="btn btn-secondary btn-sm" onclick="changeHistoryPage(1)" disabled>Next <i class="fa-solid fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: SETTINGS -->
+                <div id="tab-settings" class="dashboard-tab">
+                    <div class="tab-grid">
+                        <div class="glass-card">
+                            <h3>Edit Profile Details</h3>
+                            <form id="settings-profile-form" onsubmit="handleUpdateProfile(event)">
+                                <div class="form-group">
+                                    <label for="settings-name">Full Name</label>
+                                    <input type="text" id="settings-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settings-email">Email Address</label>
+                                    <input type="email" id="settings-email" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card">
+                            <h3>Change Password</h3>
+                            <form id="settings-password-form" onsubmit="handleChangePassword(event)">
+                                <div class="form-group">
+                                    <label for="settings-curr-pass">Current Password</label>
+                                    <input type="password" id="settings-curr-pass" required placeholder="••••••••">
+                                </div>
+                                <div class="form-group">
+                                    <label for="settings-new-pass">New Password</label>
+                                    <input type="password" id="settings-new-pass" required placeholder="Min 6 characters">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: ADMIN PANEL -->
+                <div id="tab-admin" class="dashboard-tab">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                            <div class="stat-details">
+                                <span class="label">Total Users</span>
+                                <span id="admin-stat-users" class="value">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="stat-details">
+                                <span class="label">Total Scans</span>
+                                <span id="admin-stat-scans" class="value">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            <div class="stat-details">
+                                <span class="label">Spam Flagged</span>
+                                <span id="admin-stat-spam" class="value">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                            <div class="stat-details">
+                                <span class="label">Spam Rate</span>
+                                <span id="admin-stat-spam-rate" class="value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-grid">
+                        <!-- User Management -->
+                        <div class="glass-card admin-users-card">
+                            <h3>User Account Management</h3>
+                            <div class="table-container table-container-small">
+                                <table class="data-table" id="admin-users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Users injected here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ML Model Panel -->
+                        <div class="glass-card admin-ml-card">
+                            <h3>ML Classifier Status</h3>
+                            
+                            <div class="ml-status-indicator">
+                                <span class="label">Service Status:</span>
+                                <span id="admin-ml-service-status" class="status-badge status-offline">Offline</span>
+                            </div>
+
+                            <div class="ml-metrics-box">
+                                <h4>Trained Model Details</h4>
+                                <div class="metric-row">
+                                    <span>Accuracy:</span>
+                                    <span id="admin-ml-val-accuracy" class="val">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Precision (Spam):</span>
+                                    <span id="admin-ml-val-precision" class="val">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Recall (Spam):</span>
+                                    <span id="admin-ml-val-recall" class="val">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Dataset Samples:</span>
+                                    <span id="admin-ml-val-dataset" class="val">-</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span>Last Trained:</span>
+                                    <span id="admin-ml-val-trained-at" class="val">-</span>
+                                </div>
+                            </div>
+
+                            <div class="ml-actions">
+                                <p class="action-warning"><i class="fa-solid fa-circle-exclamation"></i> Retraining will rebuild the TF-IDF feature vocabulary using the local dataset.</p>
+                                <button id="btn-retrain-ml" class="btn btn-primary btn-block" onclick="triggerMLRetraining()"><i class="fa-solid fa-rotate"></i> Retrain Model Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Client Script -->
+    <script src="app.js"></script>
+</body>
+</html>

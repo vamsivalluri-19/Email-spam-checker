@@ -1,0 +1,14 @@
+{
+    "accuracy": 1.0,
+    "spam_precision": 1.0,
+    "spam_recall": 1.0,
+    "spam_f1": 1.0,
+    "ham_precision": 1.0,
+    "ham_recall": 1.0,
+    "ham_f1": 1.0,
+    "dataset_size": 3200,
+    "train_size": 2560,
+    "test_size": 640,
+    "model_type": "Logistic Regression",
+    "trained_at": "2026-07-09 10:51:41"
+}
